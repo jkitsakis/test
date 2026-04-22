@@ -17,10 +17,12 @@ const magneticElements = document.querySelectorAll('.btn, .cta-link, .magnetic')
 ========================= */
 
 let lastScroll = 0;
+const threshold = 15; // sensitivity (10–20 ideal)
 
 window.addEventListener('scroll', () => {
 
     const currentScroll = window.scrollY;
+    const diff = currentScroll - lastScroll;
 
     /* ===== HEADER SHRINK ===== */
     if (currentScroll > 60) {
@@ -30,22 +32,20 @@ window.addEventListener('scroll', () => {
     }
 
     /* ===== HIDE / SHOW HEADER ===== */
-    if (currentScroll > lastScroll && currentScroll > 120) {
+
+    // SCROLL DOWN → HIDE
+    if (diff > threshold && currentScroll > 120) {
         header.classList.add('hidden');
         floatingCTA?.classList.add('visible');
-    } else {
+    }
+
+    // SCROLL UP → SHOW
+    else if (diff < -threshold) {
         header.classList.remove('hidden');
         floatingCTA?.classList.remove('visible');
     }
 
     lastScroll = currentScroll;
-
-    /* ===== SCROLL PROGRESS ===== */
-    if (progress) {
-        const height = document.body.scrollHeight - window.innerHeight;
-        const percent = (currentScroll / height) * 100;
-        progress.style.width = percent + '%';
-    }
 });
 
 
