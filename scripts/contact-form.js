@@ -1,5 +1,13 @@
-
 document.addEventListener('DOMContentLoaded', () => {
+  const emailjs = window.emailjs;
+
+
+  if (!emailjs) {
+    console.error('EmailJS failed to load');
+    return;
+  }
+
+
   emailjs.init('8VBPQIEh3iEgj2_Lp');
 
   const form = document.querySelector('[data-contact-form]');
@@ -20,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
       email: String(formData.get('email') || '').trim(),
       phone: String(formData.get('phone') || '').trim(),
       message: String(formData.get('message') || '').trim(),
-      website: String(formData.get('website') || '').trim(),
+      website: String(formData.get('website') || '').trim(), // honeypot
     };
 
     // 🛑 spam protection
@@ -28,7 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ✅ validation
     if (!payload.fullName || !payload.email || !payload.message) {
-      status.textContent = status.dataset.error || 'Συμπληρώστε τα υποχρεωτικά πεδία.';
+      status.textContent =
+          status.dataset.error || 'Συμπληρώστε τα υποχρεωτικά πεδία.';
       return;
     }
 
@@ -51,11 +60,13 @@ document.addEventListener('DOMContentLoaded', () => {
         to_email: 'prosopiki.iatros@gmail.com',
       });
 
-      status.textContent = status.dataset.success || 'Το μήνυμα στάλθηκε!';
+      status.textContent =
+          status.dataset.success || 'Το μήνυμα στάλθηκε!';
       form.reset();
     } catch (err) {
       console.error('EmailJS error:', err);
-      status.textContent = status.dataset.error || 'Αποτυχία αποστολής.';
+      status.textContent =
+          status.dataset.error || 'Αποτυχία αποστολής.';
     } finally {
       button.disabled = false;
     }
